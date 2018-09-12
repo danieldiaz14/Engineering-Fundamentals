@@ -1,4 +1,4 @@
-function mergeSort(data) {
+const mergeSort = (data) => {
 	//gets the entire array
 	if (data.length < 2) {
 		return data;
@@ -17,7 +17,7 @@ function mergeSort(data) {
 		
 }
 
-function merge(left, right) {
+const merge = (left, right) => {
 	var out = [];
 	while (left.length && right.length) {
 		out.push(left[0] < right[0] ? left.shift() : right.shift());

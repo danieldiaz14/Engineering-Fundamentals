@@ -1,4 +1,4 @@
-function fibbonaci(n) {
+const fibbonaci = (n) => {
 	if(n === 0) {
 		return 1;
 	}
