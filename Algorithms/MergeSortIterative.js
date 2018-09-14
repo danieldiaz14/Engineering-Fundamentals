@@ -1,35 +1,36 @@
+const merge = (left, right) => {
+	let result = [];
+
+	while (left.length && right.length) {
+		if(left[0] < right[0]) {
+			result.push(left.shift());
+		} else {
+			result.push(right.shift());
+		}
+	}
+
+	result = result.concat(left).concat(right);
+
+	return result;
+}
+
 const mergeSort = (data) => {
-	//gets the entire array
 	if (data.length < 2) {
 		return data;
 	}
-	
-	var midPoint = Math.round(data.length / 2);
-		//an index that is the middle of the array and tells it where to stop
-	return merge(
-		mergeSort(data.slice(0, midPoint)),
-		//starting the first element til the midPoint(half).
-		mergeSort(data.slice(midPoint))
-		// starting at the midpoint and going til the end.(second half)
-		//call to merge sort
-		);
-		
-		
-}
 
-const merge = (left, right) => {
-	var out = [];
-	while (left.length && right.length) {
-		out.push(left[0] < right[0] ? left.shift() : right.shift());
+	let work = [], i, len;
+
+	for(i = 0, len=data.length; i < len; i++) {
+		work.push([data[i]]);
 	}
-	
-	while (left.length) {
-		out.push(left.shift());
+	work.push([]);
+
+	for (var lim=len; lim > 1; lim = Math.floor((lim+1)/2)) {
+		for (var j =0, k= 0; k < lim; j++, k+=2) {
+			work[j] = merge(work[k], work[k+1]);
+		}
+		work[j] = [];
 	}
-	
-	while (right.length) {
-		out.push(right.shift());
-	}
-	
-	return out;
+	return work[0];
 }

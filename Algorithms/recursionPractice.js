@@ -20,5 +20,5 @@ let makeTree = (categories, parent) => {
 }
 
 console.log( 
-    JSON.stringify(makeTree(categories, null));
-)
+    JSON.stringify(makeTree(categories, null))
+);
