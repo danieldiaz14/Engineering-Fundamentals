@@ -14,5 +14,5 @@ const quickSort = (data) => {
 
     const sortedLeft = quickSort(left);
     const sortedRight = quickSort(right);
-    return [...sortedLeft, pivot, ...sortedRight];
+    return sortedLeft.concat(pivot, sortedRight);
 }
