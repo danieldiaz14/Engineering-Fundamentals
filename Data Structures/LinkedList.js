@@ -1,149 +1,95 @@
-/* LinkedList */
-
-function LinkedList() { 
-  let length = 0; 
-  // head is null because we don't have a head yet.
-  let head = null; 
-  
-  // We pass in an element and this .next is set to null(the link);
-  var Node = function(element) {
-    this.element = element; 
-    this.next = null; 
-  }; 
-  
-  // This.size just returns the length;
-  this.size = () => {
-    return length;
-  };
-  
-  // this.head just returns the head;
-  this.head = () => {
-    return head;
-  };
-  
-  // We created a new Node since we're adding
-  //
-  this.add = (element) => {
-    let node = new Node(element);
-    if(head === null){
-        head = node;
-    } else {
-        let currentNode = head;
-
-        while(currentNode.next){
-            currentNode  = currentNode.next;
+class LinkedList {
+    constructor() {
+      this.tail = this.head = null;
+      this.length = 0;
+    }
+    push(value) {
+      const node = new Node(value);
+      this.length++;
+      if (!this.head) {
+       this.head = node;
+      }
+      else {
+        this.tail.next = node;
+      }
+      this.tail = node;
+    }
+    pop() {
+      if (!this.head) return null;
+      if (this.head === this.tail) {
+        const node = this.head;
+        this.head = this.tail = null;
+        return node.value;
+      }
+      const penultimate = this._find(null, (value, nodeValue, i, current) => current.next === this.tail );
+      const ans = penultimate.next.value;
+      penultimate.next = null;
+      this.tail = penultimate;
+      this.length--;
+      return ans;
+    }
+    _find(value, test=this.test) {
+      let current = this.head;
+      let i = 0;
+      while(current) {
+        if (test(value, current.value, i, current)) {
+          return current;
         }
-
-        currentNode.next = node;
+        current = current.next;
+        i++;
+      }
+      return null;
     }
-
-    length++;
-  }; 
-
-  this.remove = (element) => {
-    let currentNode = head;
-    let previousNode;
-    if(currentNode.element === element){
-        head = currentNode.next;
-    } else {
-        while(currentNode.element !== element) {
-            previousNode = currentNode;
-            currentNode = currentNode.next;
+    get(index) {
+      const node = this._find(index, this.testIndex);
+      if (!node) return null;
+      return node.value;
+    }
+    delete(index) {
+      if (index === 0) {
+        const head = this.head;
+        if (head) {
+          this.head = head.next;
         }
-
-        previousNode.next = currentNode.next;
-    }
-
-    length --;
-  };
-  
-  this.isEmpty = () => {
-    return length === 0;
-  };
-
-  this.indexOf = (element) => {
-    let currentNode = head;
-    let index = -1;
-
-    while(currentNode){
-        index++;
-        if(currentNode.element === element){
-            return index;
+        else {
+          this.head = null;
         }
-        currentNode = currentNode.next;
+        this.length--;
+        return head.value;
+      }
+      
+      const node = this._find(index-1, this.testIndex);
+      const excise = node.next;
+      if (!excise) return null;    
+      node.next = excise.next;    
+      if (!node.next.next) this.tail = node.next;
+      this.length--;
+      return excise.value;
     }
-
-    return -1;
-  };
-
-  this.elementAt = (index) => {
-    let currentNode = head;
-    let count = 0;
-    while (count < index){
-        count ++;
-        currentNode = currentNode.next
+    test(search, nodeValue) {
+      return search === nodeValue;
     }
-    return currentNode.element;
-  };
-  
-  
-  this.addAt = (index, element) => {
-    let node = new Node(element);
-
-    let currentNode = head;
-    let previousNode;
-    let currentIndex = 0;
-
-    if(index > length){
-        return false;
+    testIndex(search, __, i) {
+      return search === i;
     }
-
-    if(index === 0){
-        node.next = currentNode;
-        head = node;
-    } else {
-        while(currentIndex < index){
-            currentIndex++;
-            previousNode = currentNode;
-            currentNode = currentNode.next;
-        }
-        node.next = currentNode;
-        previousNode.next = node;
+    serialize() {
+      const ans = [];
+      let current = this.head;
+      if (!current) return ans;
+      while (current) {
+        ans.push(current.value);
+        current = current.next;
+      }
+      return ans;
     }
-    length++;
   }
   
-  this.removeAt = (index) => {
-    let currentNode = head;
-    let previousNode;
-    let currentIndex = 0;
-    if (index < 0 || index >= length){
-        return null
+  
+  
+  class Node {
+    constructor(value) {
+      this.value = value;
+      this.next = null;
     }
-    if(index === 0){
-        head = currentNode.next;
-    } else {
-        while(currentIndex < index) {
-            currentIndex ++;
-            previousNode = currentNode;
-            currentNode = currentNode.next;
-        }
-        previousNode.next = currentNode.next
-    }
-    length--;
-    return currentNode.element;
   }
-
-} 
-
-let conga = new LinkedList();
-conga.add('Kitten');
-conga.add('Puppy');
-conga.add('Dog');
-conga.add('Cat');
-conga.add('Fish');
-console.log(conga.size());
-console.log(conga.removeAt(3));
-console.log(conga.elementAt(3));
-console.log(conga.indexOf('Puppy'));
-console.log(conga.size());
+  
